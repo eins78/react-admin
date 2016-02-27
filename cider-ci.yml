@@ -1,0 +1,22 @@
+jobs:
+
+  jest_serial:
+    name: Run Unit Tests (in series)
+    tasks:
+      test_all_with_jest:
+        scripts:
+          npm_install: { body: npm install }
+          test:
+            start-when: [npm_install]
+            body: make test-unit
+
+  jest_parallel:
+    name: Run Unit Tests (in parallel)
+    context:
+      _cider-ci_generate-tasks:
+        include-match: app/.*/__tests__/.*\.js
+      task-defaults:
+        scripts:
+          npm_install: { body: npm install }
+          test:
+            body: ./test-unit-single.sh $CIDER_CI_TASK_FILE
